@@ -1,45 +1,40 @@
 const axios = require("axios");
 
-async function check() {
+const URL =
+  "https://lift-api.vfsglobal.com/appointment/CheckIsSlotAvailable";
 
-    try {
+async function check(name, visaCategoryCode) {
+  try {
+    const response = await axios.post(URL, {
+      countryCode: "SAU",
+      missionCode: "PRT",
+      vacCode: "PORRIY",
+      visaCategoryCode,
+      roleName: "Individual",
+      loginUser: "test@test.com",
+      payCode: ""
+    });
 
-        const response = await axios.post(
-            "https://lift-api.vfsglobal.com/appointment/CheckIsSlotAvailable"
-        );
-
-        console.log(
-            new Date().toISOString(),
-            "YES",
-            response.status
-        );
-
-    } catch (e) {
-
-        if (e.response) {
-
-            console.log(
-                new Date().toISOString(),
-                "NO",
-                e.response.status
-            );
-
-        } else {
-
-            console.log(
-                new Date().toISOString(),
-                "ERROR"
-            );
-
-        }
-
-    }
-
+    console.log(
+      new Date().toISOString(),
+      name,
+      response.status
+    );
+  } catch (e) {
+    console.log(
+      new Date().toISOString(),
+      name,
+      e.response?.status || "ERROR"
+    );
+  }
 }
 
-check();
+async function run() {
+  await check("D2", "LSVRVFS");
+  await check("D3", "LSTVRVF");
+  console.log("--------------------------------");
+}
 
-setInterval(
-    check,
-    300000
-);
+run();
+
+setInterval(run, 60000);
